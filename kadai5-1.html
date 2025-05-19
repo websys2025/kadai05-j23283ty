@@ -18,8 +18,14 @@
             const res = await fetch(endpoint+"?zipcode="+myForm.zipcode.value);
             const data = await res.text();
             const json = JSON.parse(data);
+            console.log(json);
             // zipcloudのAPI呼び出して結果を表示する
-            document.getElementById("result").innerHTML =  json.results[0].address1 + json.results[0].address2 + json.results[0].address3;
+            if(json.status == "200"){
+                document.getElementById("result").innerHTML =  json.results[0].address1 + json.results[0].address2 + json.results[0].address3;
+            }
+            else{
+                document.getElementById("result").innerHTML = "error";
+            }
             }
     </script>
 </body>
