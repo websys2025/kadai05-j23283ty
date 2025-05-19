@@ -4,17 +4,27 @@
     <title>演習課題5-2：外部APIの呼び出しテスト</title>
 </head>
 <body>
-    <h1 id="msg">何かのAPI</h1>
+    <h1 id="msg">逆ジオコーディングAPI</h1>
     <form name="apiform"><p>
-        何かのフォーム：<input type="text" name="form_data">
+        緯度：<input type="text" name="form_data1">
+        経度：<input type="text" name="form_data2">
         <button type="button" id="btn1" onclick="some_api(this.form)">実行</button>
     </p></form>
     
     <div id="result"></div>
     <script>
         async function some_api(myForm) {
+            endpoint = "https://nominatim.openstreetmap.org/reverse";
             // ここにコードを書く
-            document.getElementById("result").innerHTML += myForm.form_data.value+"<br />";
+            const res = await fetch(endpoint+"?lat="+myForm.form_data1.value+"&lon="+myForm.form_data2.value+"&format=json");
+            const data = await res.text();
+            const json = JSON.parse(data);
+            if (data.includes("Unable to geocode")){
+                document.getElementById("result").innerHTML = "error:入力された座標は海などの登録されていない座標です。";
+            }
+            else{
+                document.getElementById("result").innerHTML = json.display_name.split(",").reverse().join("");
+            }
             document.apiform.reset();
         }
     </script>
